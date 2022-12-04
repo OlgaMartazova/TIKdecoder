@@ -5,9 +5,22 @@ import java.util.*;
 
 public class LZWDecoder {
     public static void main(String[] args) throws IOException {
-        StringBuilder code = new StringBuilder();
-//        String decimalCode = "0 1 2 3 6 1 0";
+        //        String decimalCode = "0 1 2 3 6 1 0";
+        // optional, without encoder
         String decimalCode = "1 2 0 4 1 3";
+        String code = getBinaryCode(decimalCode);
+        System.out.println(code);
+
+        Map<String, String> table = getDictFromFile("input.txt");
+        String decodedText = decodeLZW(code, table);
+        Scanner sc = new Scanner(System.in);
+        int bwNumber = sc.nextInt();
+        String output = decodeBW(decodedText, bwNumber);
+        System.out.println(output);
+    }
+
+    private static String getBinaryCode(String decimalCode) {
+        StringBuilder code = new StringBuilder();
         for (int number : Arrays
                 .stream(decimalCode.split("\\s"))
                 .mapToInt(Integer::parseInt)
@@ -15,15 +28,7 @@ public class LZWDecoder {
         ) {
             code.append(toCode(number));
         }
-//        System.out.println(code);
-        Map<String, String> table = getDictFromFile("input.txt");
-        System.out.println(code);
-        String decodedText = decodeLZW(code.toString(), table);
-//        System.out.println(decodedText);
-        Scanner sc = new Scanner(System.in);
-        int bwNumber = sc.nextInt();
-        String output = decodeBW(decodedText, bwNumber);
-        System.out.println(output);
+        return code.toString();
     }
 
     public static Map<String, String> getDictFromFile(String fileName) throws IOException {
